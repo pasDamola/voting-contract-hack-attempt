@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("Voting", function () {
-  let deployer, account1;
+  let deployer, attacker, voter1;
   const testProposal1 = ethers.utils.formatBytes32String("Go hard");
   const testProposal2 = ethers.utils.formatBytes32String("Go Home");
 
@@ -28,5 +28,14 @@ describe("Voting", function () {
     await expect(
       this.ballot.connect(attacker).giveRightToVote(voter1.address)
     ).to.be.revertedWith("Only chairperson can give right to vote.");
+  });
+
+  it("should allow voters who have been given rights to vote", async function () {
+    await this.ballot.giveRightToVote(voter1.address);
+    await this.ballot.connect(voter1).vote(0);
+
+    const voterInfo = await this.ballot.voters(voter1.address);
+    const voterInfoObject = JSON.parse(JSON.stringify(voterInfo));
+    expect(voterInfoObject[1]).to.equal(true);
   });
 });
