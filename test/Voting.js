@@ -7,7 +7,7 @@ describe("Voting", function () {
   const testProposal2 = ethers.utils.formatBytes32String("Go Home");
 
   beforeEach(async function () {
-    [deployer, account1] = await ethers.getSigners();
+    [deployer, attacker, voter1] = await ethers.getSigners();
 
     const Ballot = await ethers.getContractFactory("Voting", deployer);
     this.ballot = await Ballot.deploy([testProposal1, testProposal2]);
@@ -18,5 +18,15 @@ describe("Voting", function () {
       await ethers.provider.getStorageAt(this.ballot.address, 2)
     );
     expect(proposalsLength.eq(2)).to.equal(true);
+  });
+
+  it("should set the deployer account as the chairperson at deployment", async function () {
+    expect(await this.ballot.chairperson()).to.equal(deployer.address);
+  });
+
+  it("should be impossible for anyone asides the chairperson to assign voting rights", async function () {
+    await expect(
+      this.ballot.connect(attacker).giveRightToVote(voter1.address)
+    ).to.be.revertedWith("Only chairperson can give right to vote.");
   });
 });
