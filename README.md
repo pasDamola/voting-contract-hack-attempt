@@ -1,13 +1,5 @@
-# Sample Hardhat Project
+# Result - Hack not successful
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This project demonstrates that the attempt to take over as the chairperson and hack the Voting contract from the solidity documentation was unsuccessful. There are tests that have been written to prove this audit
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+Check them out in the tests/Voting.js:
